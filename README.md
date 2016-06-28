@@ -2,9 +2,11 @@
 
 ### What is this repository for? ###
 
-* IBAN (International Bank Account Number )  generator
+IBAN (International Bank Account Number )  generator
 
-### How could I use it? ###
+### How can I use it? ###
+
+After you add it to your project you can use as follows:
 
 ``` java
 
