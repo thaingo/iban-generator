@@ -21,7 +21,7 @@ public class IbanFormat {
     public IbanFormat() {}
 
     public IbanFormat(String countryCode, String... bbanFormatGroup) {
-        if(countryCode == null || countryCode.length() < 2) {
+        if(countryCode == null || countryCode.length() != 2) {
             throw new IllegalArgumentException("Wrong country code");
         }
 

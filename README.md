@@ -2,7 +2,9 @@
 
 ### What is this repository for? ###
 
-IBAN (International Bank Account Number )  generator
+Pseudo IBAN ([International Bank Account Number](https://en.wikipedia.org/wiki/International_Bank_Account_Number)) generator
+
+Library is thread-safe
 
 ### How can I use it? ###
 
@@ -21,9 +23,3 @@ Or even with your own format:
 IBANGenerator.generateNext(new IbanFormat("RU", "20n"));
 
 ```
-
-For simplicity using only 2 types:
-
-a - alphabet
-n - numeric
-c - goes as numeric
