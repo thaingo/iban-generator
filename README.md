@@ -21,3 +21,9 @@ Or even with your own format:
 IBANGenerator.generateNext(new IbanFormat("RU", "20n"));
 
 ```
+
+For simplicity using only 2 types:
+
+a - alphabet
+n - numeric
+c - goes as numeric

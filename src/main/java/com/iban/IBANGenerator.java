@@ -1,10 +1,9 @@
 package com.iban;
 
 import com.iban.format.IbanFormat;
+import com.iban.utils.IbanUtils;
 
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,14 +24,18 @@ public final class IBANGenerator {
     }
 
     private static String getNewNumber(IbanFormat format) {
-        String base = new BigInteger(100, new Random()).toString();
+        String iban = "";
 
-        base = base.substring(0, format.getBankCode() + format.getAccountNumber());
+        for(IbanFormat.BbanFormat bbanFormat: format.getFormatList()) {
+            if(bbanFormat.isAlpha()) {
+                iban += IbanUtils.getRandomString(bbanFormat.getLength());
+            } else {
+                iban += IbanUtils.getRandomNumber(bbanFormat.getLength());
+            }
+        }
 
-        String code = format.getCountryCodeNumber();
+        int checkSum = 98 - new BigInteger(IbanUtils.toNumberString(iban + format.getCountryCode()) + "00").mod(new BigInteger("97")).intValue();
 
-        int checkSum = 98 - new BigInteger(base + code + "00").mod(new BigInteger("97")).intValue();
-
-        return format.getCountryCode() + checkSum + base;
+        return format.getCountryCode() + (checkSum < 10 ? "0" + checkSum : checkSum) + iban;
     }
 }

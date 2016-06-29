@@ -1,35 +1,64 @@
 package com.iban.format;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.iban.utils.IbanUtils.tryParseInt;
+
 /**
  * Created by antosha4e on 28.06.16.
  */
 public class IbanFormat {
-    public static final IbanFormat GERMANY1 = new IbanFormat("DE", 8, 10);
+    private static final int MAX_LENGTH = 30;
+
     public static final IbanFormat GERMANY = new IbanFormat("DE", "18n");
-    public static final IbanFormat AUSTRIA = new IbanFormat("AT", 5, 11);
-    public static final IbanFormat NETHERLANDS = new IbanFormat("NL", "4a,10n");
+    public static final IbanFormat AUSTRIA = new IbanFormat("AT", "16n");
+    public static final IbanFormat NETHERLANDS = new IbanFormat("NL", "4a", "10n");
 
     private String countryCode;
-    private String countryCodeNumber;
-    private int bankCode;
-    private int accountNumber;
+    private List<BbanFormat> formatList = new ArrayList<>();
 
     public IbanFormat() {}
 
-    public IbanFormat(String countryCode, String bbanFormat) {
-        this.countryCode = countryCode;
-        this.countryCodeNumber = "" + (countryCode.codePointAt(0) - 55) + (countryCode.codePointAt(1) - 55);
+    public IbanFormat(String countryCode, String... bbanFormatGroup) {
+        if(countryCode == null || countryCode.length() < 2) {
+            throw new IllegalArgumentException("Wrong country code");
+        }
 
-        this.bankCode = bankCode;
-        this.accountNumber = accountNumber;
+        if (bbanFormatGroup == null || bbanFormatGroup.length == 0) {
+            throw new IllegalArgumentException("No BBAN format provided");
+        }
+
+        this.countryCode = countryCode;
+        int length = 0;
+
+        for (String format : bbanFormatGroup) {
+            int len = tryParseInt(format.substring(0, format.length() - 1), 0);
+
+            if (len < 1) {
+                throw new IllegalArgumentException("Wrong format");
+            }
+
+            length += len;
+
+            // for simplicity
+            // later can extend to use all types : 'a', 'n', 'c'
+            boolean alpha = format.endsWith("a");
+
+            formatList.add(new BbanFormat(len, alpha));
+        }
+
+        if (length > MAX_LENGTH) {
+            throw new IllegalArgumentException("BBAN length is too long");
+        }
     }
 
-    public IbanFormat(String countryCode, int bankCode, int accountNumber) {
-        this.countryCode = countryCode;
-        this.countryCodeNumber = "" + (countryCode.codePointAt(0) - 55) + (countryCode.codePointAt(1) - 55);
+    public List<BbanFormat> getFormatList() {
+        return formatList;
+    }
 
-        this.bankCode = bankCode;
-        this.accountNumber = accountNumber;
+    public void setFormatList(List<BbanFormat> formatList) {
+        this.formatList = formatList;
     }
 
     public String generateIBAN() {
@@ -44,27 +73,29 @@ public class IbanFormat {
         this.countryCode = countryCode;
     }
 
-    public int getBankCode() {
-        return bankCode;
-    }
+    public static class BbanFormat {
+        private int length;
+        private boolean alpha;
 
-    public void setBankCode(int bankCode) {
-        this.bankCode = bankCode;
-    }
+        public BbanFormat(int length, boolean alpha) {
+            this.length = length;
+            this.alpha = alpha;
+        }
 
-    public int getAccountNumber() {
-        return accountNumber;
-    }
+        public int getLength() {
+            return length;
+        }
 
-    public void setAccountNumber(int accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+        public void setLength(int length) {
+            this.length = length;
+        }
 
-    public String getCountryCodeNumber() {
-        return countryCodeNumber;
-    }
+        public boolean isAlpha() {
+            return alpha;
+        }
 
-    public void setCountryCodeNumber(String countryCodeNumber) {
-        this.countryCodeNumber = countryCodeNumber;
+        public void setAlpha(boolean alpha) {
+            this.alpha = alpha;
+        }
     }
 }
