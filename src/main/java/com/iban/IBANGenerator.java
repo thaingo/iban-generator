@@ -7,14 +7,12 @@ import java.math.BigInteger;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created: antosha4e
- * Date: 28.06.16
- */
 public final class IBANGenerator {
+
     private static Set<String> ibans = ConcurrentHashMap.newKeySet();
 
     public static String generateNext(IbanFormat format) {
+
         String iban = null;
 
         while(!ibans.add(iban = getNewNumber(format)));
@@ -23,13 +21,14 @@ public final class IBANGenerator {
     }
 
     private static String getNewNumber(IbanFormat format) {
-        String iban = "";
+
+        StringBuilder iban = new StringBuilder();
 
         for(IbanFormat.BbanFormat bbanFormat: format.getFormatList()) {
             if(bbanFormat.isAlpha()) {
-                iban += IbanUtils.getRandomString(bbanFormat.getLength());
+                iban.append(IbanUtils.getRandomString(bbanFormat.getLength()));
             } else {
-                iban += IbanUtils.getRandomNumber(bbanFormat.getLength());
+                iban.append(IbanUtils.getRandomNumber(bbanFormat.getLength()));
             }
         }
 

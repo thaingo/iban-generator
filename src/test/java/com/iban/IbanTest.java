@@ -8,11 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.testng.Assert.assertTrue;
 
-/**
- * Created: antosha4e
- * Date: 29.06.16
- */
 public class IbanTest {
+
     private static Set<String> ibans = ConcurrentHashMap.newKeySet();
 
     @Test(threadPoolSize = 10, invocationCount = 2000,  timeOut = 10000)

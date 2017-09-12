@@ -5,9 +5,6 @@ import java.util.List;
 
 import static com.iban.utils.IbanUtils.tryParseInt;
 
-/**
- * Created by antosha4e on 28.06.16.
- */
 public class IbanFormat {
     private static final int MAX_LENGTH = 30;
 
@@ -21,6 +18,7 @@ public class IbanFormat {
     public IbanFormat() {}
 
     public IbanFormat(String countryCode, String... bbanFormatGroup) {
+
         if(countryCode == null || countryCode.length() != 2) {
             throw new IllegalArgumentException("Wrong country code");
         }
